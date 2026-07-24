@@ -49,7 +49,7 @@ const loginUser = async (username, password) => {
 
     try {
         const existingUser = await pool.query(
-            "SELECT id, password_hash FROM users WHERE username = $1",
+            "SELECT id, username, password_hash FROM users WHERE username = $1",
             [username]
         );
 
@@ -63,7 +63,14 @@ const loginUser = async (username, password) => {
 
         if (isMatch) {
             //return res.status(200).json({ authenticated: true, message: "Login successful"});
-            return { authenticated: true, message: "Login successful" }
+            return { 
+                authenticated: true,
+                message: "Login successful",
+                user: {
+                    id: existingUser.rows[0].id,
+                    username: existingUser.rows[0].username
+                } 
+            }
         } else {
             //return res.status(401).json({ authenticated: false, message: "Invalid username or password"});
             const error = new Error("Invalid username or password");

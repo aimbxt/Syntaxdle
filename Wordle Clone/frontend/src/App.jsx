@@ -23,6 +23,19 @@ function App() {
   const [isOpen, setIsOpen] = useState(false)
   const [invalidGuess, setInvalidGuess] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const response = await fetch('/api/user/session', {
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      setIsAuthenticated(data.authenticated);
+    };
+
+    checkSession();
+  }, [])
   
   useEffect(() => {
     if (guessCount === 6 || isWin) {
@@ -147,6 +160,7 @@ function App() {
     const response = await fetch('/api/guess', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
+      credentials: 'include',
       body: JSON.stringify({guess : [...guess.toLowerCase()]})
     })
 

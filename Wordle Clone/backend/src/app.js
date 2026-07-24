@@ -15,6 +15,9 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 60000 * 60
   }
 }))
@@ -22,6 +25,9 @@ app.use('/api/user', usersRouter)
 app.use('/api/guess', guessRouter) 
 
 app.get('/', (req, res) => {
+  console.log(req.session);
+  console.log(req.session.id);
+  req.session.visited = true;
   res.send('Hello World!');
 });
 
