@@ -126,6 +126,19 @@ function App() {
     
   }
 
+  const logoutUser = async () => {
+      const response = await fetch('/api/user/logout', {
+        method: 'POST',
+        credentials: "include"
+      });
+
+      if (!response.ok) {
+        throw new Error("could not logout");
+      }
+
+      setIsAuthenticated(false);
+    } 
+
   const letterStatus = useMemo(() => {
     const status = {}
     pastGuesses.forEach((word) => {
@@ -209,7 +222,7 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      <NavBar logoutUser={logoutUser}/>
       <h1>WORDLE</h1>
       {isAuthenticated ? 
       <div> 
