@@ -9,20 +9,37 @@ import PopUp from './PopUp/PopUp.jsx'
 import LoginPage from './LoginPage/LoginPage.jsx'
 
 function App() {
-  const emptyBoard = [[{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
-                      [{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
-                      [{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
-                      [{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
-                      [{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
-                      [{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}]]
+  const createEmptyBoard = () =>
+    Array.from({ length: 6 }, () =>
+      Array.from({ length: 5 }, () => ({
+        letter: '',
+        color: 'lightgray'
+      }))
+    );
 
-  const [pastGuesses, setPastGuesses] = useState(emptyBoard)
+  const [pastGuesses, setPastGuesses] = useState(createEmptyBoard())
   const [currentGuess, setCurrentGuess] = useState("")
   const [isWin, setIsWin] = useState(false)
   const [guessCount, setGuessCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [invalidGuess, setInvalidGuess] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [gameState, setGameState] = useState({
+  board: [],
+  guesses: [],
+  status: 'playing',
+  solved: false
+});
+
+  const normalizeBoard = (boardState) => {
+    const board = createEmptyBoard();
+    (boardState || []).forEach((row, index) => {
+      if (index < board.length) {
+        board[index] = row.map((cell) => ({ ...cell }));
+      }
+    });
+    return board;
+  };
 
   useEffect(() => {
     const checkSession = async () => {
@@ -32,6 +49,13 @@ function App() {
 
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
+
+      if (data.gameState) {
+        setGameState(data.gameState);
+        setPastGuesses(normalizeBoard(data.gameState.board));
+        setGuessCount(data.gameState.guesses.length || 0);
+        setIsWin(data.gameState.solved || false);
+      }
     };
 
     checkSession();
@@ -164,18 +188,20 @@ function App() {
       body: JSON.stringify({guess : [...guess.toLowerCase()]})
     })
 
-    const {letterArray, isWin: guessIsWin} = await response.json()
+    const data = await response.json()
 
     if (!response.ok) {
       setInvalidGuess(true)
       setTimeout(() => setInvalidGuess(false), 300)
       return
     }
-    setIsWin(guessIsWin)
-    setPastGuesses((currentHistory) => (
-      currentHistory.map((array, index) => index === guessCount ? letterArray : array)
-    ))
-    setGuessCount((currentGuessCount) => currentGuessCount + 1)
+
+    const { gameState: newGameState } = data;
+
+    setGameState(newGameState);
+    setPastGuesses(normalizeBoard(newGameState.board));
+    setGuessCount(newGameState.guesses.length || 0);
+    setIsWin(newGameState.solved || false);
   }
 
 

@@ -66,7 +66,13 @@ const getSession = (req, res) => {
     console.log(req.session);
     return res.json({
         authenticated: Boolean(req.session.user),
-        user: req.session.user || null
+        user: req.session.user || null,
+        gameState: req.session.gameState || {
+        board: [],
+            guesses: [],
+            status: 'playing',
+            solved: false
+        }
     });
 };
 
