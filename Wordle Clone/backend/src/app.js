@@ -1,17 +1,19 @@
+require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session')
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const usersRouter = require('./routes/users')
 const guessRouter = require('./routes/guess')
+
 
 app.use(cors({
   credentials: true
 }))
 app.use(express.json())
 app.use(session({
-  secret: 'secret',
+  secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false,
   cookie: {
