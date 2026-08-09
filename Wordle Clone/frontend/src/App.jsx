@@ -3,11 +3,12 @@ import { useEffect } from 'react'
 import { useMemo } from 'react'
 import './App.css'
 
-import MainGrid from './MainGrid/MainGrid.jsx'
-import Keyboard from './Keyboard/Keyboard.jsx'
-import PopUp from './PopUp/PopUp.jsx'
-import LoginPage from './LoginPage/LoginPage.jsx'
-import NavBar from './NavBar/NavBar.jsx'
+import MainGrid from './MainGrid/MainGrid.jsx';
+import Keyboard from './Keyboard/Keyboard.jsx';
+import PopUp from './PopUp/PopUp.jsx';
+import LoginPage from './LoginPage/LoginPage.jsx';
+import NavBar from './NavBar/NavBar.jsx';
+import ModalManager from './PopUp/ModalManager.jsx';
 
 function App() {
   const createEmptyBoard = () =>
@@ -22,7 +23,8 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState("")
   const [isWin, setIsWin] = useState(false)
   const [guessCount, setGuessCount] = useState(0)
-  const [isOpen, setIsOpen] = useState(false)
+  //const [isOpen, setIsOpen] = useState(false)
+  const [activeModal, setActiveModal] = useState(null);
   const [invalidGuess, setInvalidGuess] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [gameState, setGameState] = useState({
@@ -43,6 +45,7 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(activeModal)
     const checkSession = async () => {
       const response = await fetch('/api/user/session', {
         credentials: 'include'
@@ -64,10 +67,11 @@ function App() {
   
   useEffect(() => {
     if (guessCount === 6 || isWin) {
-      setIsOpen(true);
+      setActiveModal('gameOver');
     }
     else {
-      setIsOpen(false);
+      if (activeModal === 'gameOver')
+        setActiveModal(null);
     }
   }, [guessCount, isWin]);
 
@@ -165,11 +169,11 @@ function App() {
     let temp = Math.max(0, guessCount - 1)
     console.log(currentGuess)
     console.log(pastGuesses)
-    console.log(`isOpen: ${isOpen}`)
     console.log(`isWin: ${isWin}`)
     console.log(pastGuesses[temp])
     console.log(letterStatus)
-  }, [currentGuess, pastGuesses, isOpen, isWin, letterStatus])
+    console.log(activeModal)
+  }, [currentGuess, pastGuesses, isWin, letterStatus])
   
   const editGuess = (input) => {
     if (isWin || guessCount === 6) {
@@ -222,20 +226,19 @@ function App() {
 
   return (
     <>
-      <NavBar logoutUser={logoutUser}/>
+      <NavBar logoutUser={logoutUser} openHowToPlay={() => setActiveModal('howToPlay')} openStats={() => setActiveModal('stats')}/>
       <h1>WORDLE</h1>
       {isAuthenticated ? 
       <div> 
         <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
         <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
-        <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >
-          {isWin ? <h1>You won! <br /><br /><br /> Guesses: {guessCount}</h1>: <h1>Try again!</h1>}
-        </PopUp>
       </div>:
       
       <div>
         <LoginPage loginUser={loginUser}/>
       </div>}
+
+      <ModalManager activeModal={activeModal} onClose={() => setActiveModal(null)} isWin={isWin} guessCount={guessCount}/>
       
     </>
   )

@@ -1,6 +1,6 @@
 import './NavBar.css';
 
-export default function NavBar({ logoutUser }) {
+export default function NavBar({ logoutUser, openHowToPlay, openStats }) {
     const handleLogout = async () => {
         try {
             await logoutUser();
@@ -14,10 +14,10 @@ export default function NavBar({ logoutUser }) {
             <button className="nav-button" type="button" onClick={handleLogout}>
                 Logout
             </button>
-            <button className="nav-button" type="button">
+            <button className="nav-button" type="button" onClick={openHowToPlay}>
                 How to Play
             </button>
-            <button className="nav-button" type="button">
+            <button className="nav-button" type="button" onClick={openStats}>
                 Stats
             </button>
         </div>
