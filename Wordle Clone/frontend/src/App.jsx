@@ -7,6 +7,7 @@ import MainGrid from './MainGrid/MainGrid.jsx'
 import Keyboard from './Keyboard/Keyboard.jsx'
 import PopUp from './PopUp/PopUp.jsx'
 import LoginPage from './LoginPage/LoginPage.jsx'
+import NavBar from './NavBar/NavBar.jsx'
 
 function App() {
   const createEmptyBoard = () =>
@@ -208,6 +209,7 @@ function App() {
 
   return (
     <>
+      <NavBar />
       <h1>WORDLE</h1>
       {isAuthenticated ? 
       <div> 
