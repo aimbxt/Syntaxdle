@@ -44,54 +44,92 @@ function App() {
     return board;
   };
 
-  useEffect(() => {
-    console.log(activeModal)
-    const checkSession = async () => {
+  const resetGameState = () => {
+    setCurrentGuess('');
+    setPastGuesses(createEmptyBoard());
+    setGuessCount(0);
+    setIsWin(false);
+    setInvalidGuess(false);
+    setActiveModal(null);
+    setGameState({
+      board: [],
+      guesses: [],
+      status: 'playing',
+      solved: false
+    });
+  };
+
+  const hydrateGameState = (newGameState) => {
+    setGameState(newGameState);
+    setPastGuesses(normalizeBoard(newGameState.board));
+    setGuessCount(newGameState.guesses.length || 0);
+    setIsWin(newGameState.solved || false);
+  };
+
+  const loadSessionState = async () => {
+    try {
       const response = await fetch('/api/user/session', {
         credentials: 'include'
       });
 
+      if (!response.ok) {
+        throw new Error('session check failed');
+      }
+
       const data = await response.json();
-      setIsAuthenticated(data.authenticated);
+      const authenticated = Boolean(data.authenticated);
+      setIsAuthenticated(authenticated);
+
+      if (!authenticated) {
+        resetGameState();
+        return;
+      }
 
       if (data.gameState) {
-        setGameState(data.gameState);
-        setPastGuesses(normalizeBoard(data.gameState.board));
-        setGuessCount(data.gameState.guesses.length || 0);
-        setIsWin(data.gameState.solved || false);
+        hydrateGameState(data.gameState);
+      } else {
+        resetGameState();
       }
-    };
+    } catch (error) {
+      console.error(error);
+      setIsAuthenticated(false);
+      resetGameState();
+    }
+  };
 
-    checkSession();
+  useEffect(() => {
+    loadSessionState();
   }, [])
   
   useEffect(() => {
     if (guessCount === 6 || isWin) {
       setActiveModal('gameOver');
+    } else if (activeModal === 'gameOver') {
+      setActiveModal(null);
     }
-    else {
-      if (activeModal === 'gameOver')
-        setActiveModal(null);
-    }
-  }, [guessCount, isWin]);
+  }, [guessCount, isWin, activeModal]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (guessCount === 6 || isWin) return
       if (event.repeat) return
+
       const key = event.key.toUpperCase()
-      // letters
+
+      if (!isAuthenticated) {
+        return
+      }
+
       if (/^[A-Z]$/.test(key)) {
+        event.preventDefault()
         if (currentGuess.length < 5) {
           editGuess(key)
         }
-      }
-      // backspace
-      else if (event.key === "Backspace") {
+      } else if (event.key === "Backspace") {
+        event.preventDefault()
         editGuess("BACKSPACE")
-      }
-      // enter
-      else if (event.key === "Enter") {
+      } else if (event.key === "Enter") {
+        event.preventDefault()
         editGuess("ENTER")
       }
     }
@@ -101,7 +139,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [currentGuess, guessCount, isWin])
+  }, [isAuthenticated, currentGuess, guessCount, isWin])
 
   const loginUser = async (username, password) => {
     try {
@@ -118,9 +156,13 @@ function App() {
       }
 
       const {authenticated} = await response.json()
-      setIsAuthenticated(authenticated)
-      if (!authenticated) {throw new Error("invalid login credentials")}
+      if (!authenticated) {
+        setIsAuthenticated(false)
+        throw new Error("invalid login credentials")
+      }
 
+      setIsAuthenticated(true)
+      await loadSessionState()
       return authenticated
     }
     catch (err) {
@@ -141,6 +183,7 @@ function App() {
       }
 
       setIsAuthenticated(false);
+      resetGameState();
     } 
 
   const letterStatus = useMemo(() => {
@@ -165,16 +208,6 @@ function App() {
     return status
   }, [pastGuesses])
 
-  useEffect(() => {
-    let temp = Math.max(0, guessCount - 1)
-    console.log(currentGuess)
-    console.log(pastGuesses)
-    console.log(`isWin: ${isWin}`)
-    console.log(pastGuesses[temp])
-    console.log(letterStatus)
-    console.log(activeModal)
-  }, [currentGuess, pastGuesses, isWin, letterStatus])
-  
   const editGuess = (input) => {
     if (isWin || guessCount === 6) {
       return;
@@ -214,22 +247,17 @@ function App() {
       return
     }
 
-    const { gameState: newGameState } = data;
-
-    setGameState(newGameState);
-    setPastGuesses(normalizeBoard(newGameState.board));
-    setGuessCount(newGameState.guesses.length || 0);
-    setIsWin(newGameState.solved || false);
+    hydrateGameState(data.gameState);
   }
 
 
 
   return (
     <>
-      <NavBar logoutUser={logoutUser} openHowToPlay={() => setActiveModal('howToPlay')} openStats={() => setActiveModal('stats')}/>
       <h1>WORDLE</h1>
       {isAuthenticated ? 
       <div> 
+        <NavBar logoutUser={logoutUser} openHowToPlay={() => setActiveModal('howToPlay')} openStats={() => setActiveModal('stats')}/>
         <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
         <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
       </div>:
