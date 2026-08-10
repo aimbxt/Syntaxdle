@@ -1,35 +1,75 @@
 import './LoginPage.css'
 import { useState } from 'react'
 
-export default function LoginPage({ loginUser }) {
+export default function LoginPage({ loginUser, registerUser }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [isSignUp, setIsSignUp] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        setErrorMessage('')
+
+        const trimmedUsername = username.trim()
+        const trimmedPassword = password.trim()
+
+        if (!trimmedUsername) {
+            setErrorMessage('Please enter a username.')
+            return
+        }
 
         if (isSignUp) {
-            if (username.length >= 8 && password.length >= 8 && password === confirmPassword) {
+            if (trimmedUsername.length < 3) {
+                setErrorMessage('Username must be at least 3 characters long.')
+                return
+            }
+
+            if (trimmedPassword.length < 8) {
+                setErrorMessage('Password must be at least 8 characters long.')
+                return
+            }
+
+            if (trimmedPassword !== confirmPassword.trim()) {
+                setErrorMessage('Passwords do not match.')
+                return
+            }
+
+            try {
+                await registerUser(trimmedUsername, trimmedPassword)
                 setUsername('')
                 setPassword('')
                 setConfirmPassword('')
-                setIsSignUp(false)
+            } catch (err) {
+                setErrorMessage(err.message || 'Unable to create your account right now.')
             }
             return
         }
 
-        if (username.length >= 8 && password.length >= 8) {
-            loginUser(username, password)
+        if (trimmedUsername.length < 3) {
+            setErrorMessage('Username must be at least 3 characters long.')
+            return
+        }
+
+        if (trimmedPassword.length < 8) {
+            setErrorMessage('Password must be at least 8 characters long.')
+            return
+        }
+
+        try {
+            await loginUser(trimmedUsername, trimmedPassword)
             setUsername('')
             setPassword('')
+        } catch (err) {
+            setErrorMessage(err.message || 'Unable to sign in right now.')
         }
     }
 
     const toggleMode = () => {
         setIsSignUp((currentMode) => !currentMode)
         setConfirmPassword('')
+        setErrorMessage('')
     }
 
     return (
@@ -75,6 +115,8 @@ export default function LoginPage({ loginUser }) {
                             />
                         </>
                     )}
+
+                    {errorMessage && <p className="login-error-message">{errorMessage}</p>}
 
                     <button className="login-submit" type="submit">
                         {isSignUp ? 'Create account' : 'Enter'}

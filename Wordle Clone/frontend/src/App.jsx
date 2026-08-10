@@ -141,35 +141,59 @@ function App() {
     }
   }, [isAuthenticated, currentGuess, guessCount, isWin])
 
+  const registerUser = async (username, password) => {
+    try {
+      const response = await fetch('/api/user/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password}),
+        credentials: 'include'
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        setIsAuthenticated(false)
+        throw new Error(data.error || data.errors?.[0]?.msg || 'Registration failed')
+      }
+
+      setIsAuthenticated(true)
+      await loadSessionState()
+      return data
+    } catch (err) {
+      setIsAuthenticated(false)
+      throw err
+    }
+  }
+
   const loginUser = async (username, password) => {
     try {
       const response = await fetch('/api/user/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username, password}),
-        credentials: "include"
+        credentials: 'include'
       })
+
+      const data = await response.json().catch(() => ({}))
 
       if (!response.ok) {
         setIsAuthenticated(false)
-        throw new Error("invalid login")
+        throw new Error(data.error || data.errors?.[0]?.msg || 'Login failed')
       }
 
-      const {authenticated} = await response.json()
-      if (!authenticated) {
+      if (!data.authenticated) {
         setIsAuthenticated(false)
-        throw new Error("invalid login credentials")
+        throw new Error(data.error || 'Invalid login credentials')
       }
 
       setIsAuthenticated(true)
       await loadSessionState()
-      return authenticated
+      return data
+    } catch (err) {
+      setIsAuthenticated(false)
+      throw err
     }
-    catch (err) {
-      setIsAuthenticated(false);
-      throw err;
-    }
-    
   }
 
   const logoutUser = async () => {
@@ -263,7 +287,7 @@ function App() {
       </div>:
       
       <div>
-        <LoginPage loginUser={loginUser}/>
+        <LoginPage loginUser={loginUser} registerUser={registerUser} />
       </div>}
 
       <ModalManager activeModal={activeModal} onClose={() => setActiveModal(null)} isWin={isWin} guessCount={guessCount}/>

@@ -25,6 +25,7 @@ const register = async (req, res) => {
 
     try {
         const result = await userService.registerUser(username, password);
+        await createLoginSession(req, result.user);
         return res.status(201).json(result);
     } catch (err) {
         return res.status(err.statusCode || 500).json({

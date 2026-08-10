@@ -2,88 +2,102 @@ const pool = require('../db/database');
 const bcrypt = require('bcrypt');
 
 const registerUser = async (username, password) => {
-    if (!username || !password) {
-        const error = new Error("Invalid username or password");
+    const normalizedUsername = username?.trim();
+    const normalizedPassword = password?.trim();
+
+    if (!normalizedUsername || !normalizedPassword) {
+        const error = new Error('Username and password are required.');
         error.statusCode = 400;
         throw error;
     }
+
+    if (normalizedPassword.length < 8) {
+        const error = new Error('Password must be at least 8 characters long.');
+        error.statusCode = 400;
+        throw error;
+    }
+
     try {
         const existingUser = await pool.query(
             'SELECT id FROM users WHERE username = $1',
-            [username]
+            [normalizedUsername]
         );
 
         if (existingUser.rows.length > 0) {
-            const error = new Error('Username already exists');
-            error.statusCode = 400;
+            const error = new Error('An account with that username already exists.');
+            error.statusCode = 409;
             throw error;
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(normalizedPassword, 10);
 
         const result = await pool.query(
             'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id, username',
-            [username, hashedPassword]
+            [normalizedUsername, hashedPassword]
         );
 
-        return { user: result.rows[0] }
-        //res.status(201).json({ user: result.rows[0]});
+        return {
+            authenticated: true,
+            message: 'Account created successfully.',
+            user: result.rows[0]
+        };
     } catch (err) {
         console.error(err);
         if (err.statusCode) {
             throw err;
         }
-        
-        const error = new Error('Login failed');
+
+        const error = new Error('Registration failed.');
         error.statusCode = 500;
         throw error;
     }
 }
 
 const loginUser = async (username, password) => {
-    if (!username || !password) {
-        const error = new Error("Invalid username or password");
+    const normalizedUsername = username?.trim();
+    const normalizedPassword = password?.trim();
+
+    if (!normalizedUsername || !normalizedPassword) {
+        const error = new Error('Username and password are required.');
         error.statusCode = 400;
         throw error;
     }
 
     try {
         const existingUser = await pool.query(
-            "SELECT id, username, password_hash FROM users WHERE username = $1",
-            [username]
+            'SELECT id, username, password_hash FROM users WHERE username = $1',
+            [normalizedUsername]
         );
 
         if (existingUser.rows.length === 0) {
-            const error = new Error('User does not exist');
+            const error = new Error('No account found for that username.');
             error.statusCode = 400;
             throw error;
         }
 
-        const isMatch = await bcrypt.compare(password, existingUser.rows[0].password_hash);
+        const isMatch = await bcrypt.compare(normalizedPassword, existingUser.rows[0].password_hash);
 
         if (isMatch) {
-            //return res.status(200).json({ authenticated: true, message: "Login successful"});
-            return { 
+            return {
                 authenticated: true,
-                message: "Login successful",
+                message: 'Login successful.',
                 user: {
                     id: existingUser.rows[0].id,
                     username: existingUser.rows[0].username
-                } 
-            }
-        } else {
-            //return res.status(401).json({ authenticated: false, message: "Invalid username or password"});
-            const error = new Error("Invalid username or password");
-            error.statusCode = 401;
-            throw error;
+                }
+            };
         }
+
+        const error = new Error('Invalid username or password.');
+        error.statusCode = 401;
+        throw error;
     } catch (err) {
         console.error(err);
         if (err.statusCode) {
             throw err;
         }
 
-        const error = new Error('Login failed');
+        const error = new Error('Login failed.');
         error.statusCode = 500;
         throw error;
     }

@@ -79,6 +79,13 @@
   box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
 }
 
+.login-error-message {
+  margin: 0.1rem 0 0;
+  color: #c92a2a;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
 .login-submit {
   margin-top: 0.4rem;
   padding: 0.8rem 1rem;
