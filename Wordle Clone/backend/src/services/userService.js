@@ -103,4 +103,37 @@ const loginUser = async (username, password) => {
     }
 }
 
-module.exports = { registerUser, loginUser };
+const updateStats = async (userId, won) => {
+    try {
+        if (won) {
+            await pool.query(
+                `UPDATE player_stats
+                SET 
+                games_played = games_played + 1,
+                games_won = games_won + 1,
+                current_streak = current_streak + 1,
+                max_streak = GREATEST(current_streak + 1, max_streak)
+                WHERE user_id = $1`, [userId]
+            );
+        } else {
+            await pool.query(
+                `UPDATE player_stats
+                SET 
+                games_played = games_played + 1,
+                current_streak = 0
+                WHERE user_id = $1`, [userId]
+            );
+        }
+    } catch (err) {
+        console.err(err);
+        if (err.statusCode) {
+            throw err;
+        }
+
+        const error = new Error('Login failed.');
+        error.statusCode = 500;
+        throw error;
+    }
+}
+
+module.exports = { registerUser, loginUser, updateStats };
