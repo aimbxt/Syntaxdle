@@ -60,10 +60,17 @@ function App() {
   };
 
   const hydrateGameState = (newGameState) => {
+    const nextGuessCount = newGameState.guesses.length || 0;
+    const nextIsWin = Boolean(newGameState.solved);
+
     setGameState(newGameState);
     setPastGuesses(normalizeBoard(newGameState.board));
-    setGuessCount(newGameState.guesses.length || 0);
-    setIsWin(newGameState.solved || false);
+    setGuessCount(nextGuessCount);
+    setIsWin(nextIsWin);
+
+    if (nextGuessCount >= 6 || nextIsWin) {
+      setActiveModal('gameOver');
+  }
   };
 
   const loadSessionState = async () => {
@@ -100,14 +107,6 @@ function App() {
   useEffect(() => {
     loadSessionState();
   }, [])
-  
-  useEffect(() => {
-    if (guessCount === 6 || isWin) {
-      setActiveModal('gameOver');
-    } else if (activeModal === 'gameOver') {
-      setActiveModal(null);
-    }
-  }, [guessCount, isWin, activeModal]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {

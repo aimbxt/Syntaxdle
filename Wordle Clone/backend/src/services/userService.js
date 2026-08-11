@@ -36,6 +36,12 @@ const registerUser = async (username, password) => {
             [normalizedUsername, hashedPassword]
         );
 
+        await pool.query(
+            `INSERT INTO player_stats (user_id)
+             VALUES ($1)`,
+            [result.rows[0].id]
+        );
+
         return {
             authenticated: true,
             message: 'Account created successfully.',
@@ -105,6 +111,13 @@ const loginUser = async (username, password) => {
 
 const updateStats = async (userId, won) => {
     try {
+        await pool.query(
+            `INSERT INTO player_stats (user_id)
+             VALUES ($1)
+             ON CONFLICT (user_id) DO NOTHING`,
+            [userId]
+        );
+
         if (won) {
             await pool.query(
                 `UPDATE player_stats
@@ -125,12 +138,12 @@ const updateStats = async (userId, won) => {
             );
         }
     } catch (err) {
-        console.err(err);
+        console.error(err);
         if (err.statusCode) {
             throw err;
         }
 
-        const error = new Error('Login failed.');
+        const error = new Error('Stats update failed.');
         error.statusCode = 500;
         throw error;
     }

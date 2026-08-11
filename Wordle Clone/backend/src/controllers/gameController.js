@@ -25,7 +25,7 @@ const submitGuess = async (req, res) => {
         if (result.isWin) {
             gameState.status = 'won';
             gameState.solved = true;
-            await userService.updateStats(userId, isWin);
+            await userService.updateStats(userId, true);
         } else if (gameState.guesses.length >= 6) {
             gameState.status = 'lost';
             await userService.updateStats(userId, false);
