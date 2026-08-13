@@ -149,4 +149,29 @@ const updateStats = async (userId, won) => {
     }
 }
 
-module.exports = { registerUser, loginUser, updateStats };
+const getStats = async (userId) => {
+    try {
+        const result = await pool.query(
+            `SELECT 
+            games_played, games_won, current_streak, max_streak 
+            FROM player_stats 
+            WHERE user_id = $1`, [userId]);
+
+        if (result.rows.length === 0) {
+            const error = new Error('Could not find user');
+            error.statusCode = 400;
+            throw error;
+        }  
+        
+        return result.rows[0];
+    } catch (err) {
+        if (err.statusCode) {
+            throw err;
+        }
+        const error = new Error('Could not find user');
+        error.statusCode = 500;
+        throw error;
+    }
+}
+
+module.exports = { registerUser, loginUser, updateStats, getStats };

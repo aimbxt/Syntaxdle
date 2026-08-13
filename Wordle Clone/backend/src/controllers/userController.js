@@ -77,4 +77,11 @@ const getSession = (req, res) => {
     });
 };
 
-module.exports = { register, login, logout, getSession }
+const getStats = async (req, res) => {
+    const userId = req.session.user.id;
+    const result = await userService.getStats(userId);
+
+    return res.json(result)
+}
+
+module.exports = { register, login, logout, getSession, getStats }
