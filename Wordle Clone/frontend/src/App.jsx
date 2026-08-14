@@ -108,6 +108,12 @@ function App() {
     loadSessionState();
   }, [])
 
+  const fetchPlayerStats = async () => {
+    if (!isAuthenticated) {
+      return;
+    }
+  }
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (guessCount === 6 || isWin) return
