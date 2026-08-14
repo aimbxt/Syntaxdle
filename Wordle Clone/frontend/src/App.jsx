@@ -107,10 +107,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    loadSessionState();
-  }, [])
-
   const fetchPlayerStats = async () => {
     if (!isAuthenticated) {
       return;
@@ -135,12 +131,23 @@ function App() {
   };
 
   useEffect(() => {
+    loadSessionState();
+  }, [])
+
+  useEffect(() => {
     console.log("last:" + lastGameStatus + "current:" + gameState.status + "boolean: " + (lastGameStatus !== gameState.status).toString());
-    if (activeModal === 'stats' && (!playerStats || lastGameStatus !== gameState.status)) {
+    if (activeModal === 'stats' && (lastGameStatus !== gameState.status)) {
       fetchPlayerStats();
       console.log(playerStats);
     }
   }, [activeModal, gameState, isAuthenticated, playerStats, lastGameStatus])
+
+  useEffect(() => {
+  if (isAuthenticated) {
+    fetchPlayerStats();
+    console.log(playerStats);
+  }
+}, [isAuthenticated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -323,7 +330,7 @@ function App() {
         <LoginPage loginUser={loginUser} registerUser={registerUser} />
       </div>}
 
-      <ModalManager activeModal={activeModal} onClose={() => setActiveModal(null)} isWin={isWin} guessCount={guessCount}/>
+      <ModalManager activeModal={activeModal} onClose={() => setActiveModal(null)} isWin={isWin} guessCount={guessCount} playerStats={playerStats} statsLoading={statsLoading}/>
       
     </>
   )

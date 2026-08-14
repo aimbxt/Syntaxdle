@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import PopUp from './PopUp.jsx';
 
-export default function ModalManager({ activeModal, onClose, isWin, guessCount }) {
+export default function ModalManager({ activeModal, onClose, isWin, guessCount, playerStats, statsLoading }) {
+  const statNames = {
+    games_played: "Games Played",
+    games_won: "Games Won",
+    current_streak: "Current Streak",
+    max_streak: "Max Streak"
+  }
  
   return (
     <>
@@ -12,7 +18,15 @@ export default function ModalManager({ activeModal, onClose, isWin, guessCount }
 
       <PopUp isOpen={activeModal === 'stats'} onClose={onClose}>
         <h2>Stats</h2>
-        <p>Show wins, losses, and streaks here.</p>
+        {statsLoading || !playerStats ? (
+          <h1>loading...</h1>
+        ) : (
+          <ul>{Object.entries(playerStats).map(([key, value]) => (
+            <li key={key}>
+              <p>{statNames[key] || key}: {value}</p>
+            </li>
+          ))}</ul>
+        )}
       </PopUp>
 
       <PopUp isOpen={activeModal === 'gameOver'} onClose={onClose}>
