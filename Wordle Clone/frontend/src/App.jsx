@@ -33,6 +33,9 @@ function App() {
   status: 'playing',
   solved: false
 });
+  const [playerStats, setPlayerStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [lastGameStatus, setLastGameStatus] = useState('playing');
 
   const normalizeBoard = (boardState) => {
     const board = createEmptyBoard();
@@ -112,7 +115,32 @@ function App() {
     if (!isAuthenticated) {
       return;
     }
-  }
+
+    setStatsLoading(true);
+    try {
+      const response = await fetch('api/user/stats', {
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch stats');
+
+      const data = await response.json();
+      setPlayerStats(data);
+      setLastGameStatus(gameState.status);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("last:" + lastGameStatus + "current:" + gameState.status + "boolean: " + (lastGameStatus !== gameState.status).toString());
+    if (activeModal === 'stats' && (!playerStats || lastGameStatus !== gameState.status)) {
+      fetchPlayerStats();
+      console.log(playerStats);
+    }
+  }, [activeModal, gameState, isAuthenticated, playerStats, lastGameStatus])
 
   useEffect(() => {
     const handleKeyDown = (event) => {
