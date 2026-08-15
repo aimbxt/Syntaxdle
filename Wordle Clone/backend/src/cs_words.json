@@ -1,0 +1,464 @@
+{
+"concepts": [
+{
+"word": "array",
+"definition": "A data structure that stores elements in an ordered sequence."
+},
+{
+"word": "stack",
+"definition": "A data structure that uses last-in, first-out ordering."
+},
+{
+"word": "queue",
+"definition": "A data structure that uses first-in, first-out ordering."
+},
+{
+"word": "graph",
+"definition": "A structure made of vertices connected by edges."
+},
+{
+"word": "heaps",
+"definition": "Tree-based structures commonly used for priority queues."
+},
+{
+"word": "trees",
+"definition": "Hierarchical structures made of connected nodes."
+},
+{
+"word": "tries",
+"definition": "Tree structures designed for efficient string and prefix searches."
+},
+{
+"word": "nodes",
+"definition": "Individual elements or vertices within a data structure."
+},
+{
+"word": "edges",
+"definition": "Connections between nodes in a graph or network."
+},
+{
+"word": "paths",
+"definition": "Sequences of connected vertices or nodes."
+},
+{
+"word": "cycle",
+"definition": "A path that eventually returns to its starting point."
+},
+{
+"word": "cache",
+"definition": "Fast temporary storage for frequently accessed data."
+},
+{
+"word": "index",
+"definition": "A structure that speeds up searching for stored data."
+},
+{
+"word": "tuple",
+"definition": "An ordered collection of multiple values."
+},
+{
+"word": "token",
+"definition": "A basic unit produced when processing text or code."
+},
+{
+"word": "types",
+"definition": "Categories describing what kind of data a value represents."
+},
+{
+"word": "class",
+"definition": "A programming blueprint for creating objects."
+},
+{
+"word": "scope",
+"definition": "The region where a variable or name can be accessed."
+},
+{
+"word": "bytes",
+"definition": "Units commonly used to represent digital data."
+},
+{
+"word": "chars",
+"definition": "Individual character values used to represent text."
+},
+{
+"word": "loops",
+"definition": "Programming constructs that repeatedly execute code."
+},
+{
+"word": "while",
+"definition": "A loop that runs while a condition remains true."
+},
+{
+"word": "break",
+"definition": "A statement that exits a loop or control structure."
+},
+{
+"word": "async",
+"definition": "A programming approach for handling operations without blocking."
+},
+{
+"word": "await",
+"definition": "A keyword used to wait for an asynchronous operation."
+},
+{
+"word": "yield",
+"definition": "A keyword that temporarily returns a value from a generator."
+},
+{
+"word": "throw",
+"definition": "A programming operation that raises an exception."
+},
+{
+"word": "catch",
+"definition": "A mechanism for handling an exception."
+},
+{
+"word": "casts",
+"definition": "Conversions that change a value from one data type to another."
+},
+{
+"word": "enums",
+"definition": "Types containing a predefined set of named values."
+},
+{
+"word": "macro",
+"definition": "A rule that expands into code or instructions."
+},
+{
+"word": "regex",
+"definition": "A pattern used to search, match, or manipulate text."
+},
+{
+"word": "debug",
+"definition": "The process of finding and fixing software errors."
+},
+{
+"word": "build",
+"definition": "The process of compiling or assembling software."
+},
+{
+"word": "tests",
+"definition": "Programs or procedures used to verify software behavior."
+},
+{
+"word": "mocks",
+"definition": "Simulated components used during software testing."
+},
+{
+"word": "stubs",
+"definition": "Simplified substitute components used for testing."
+},
+{
+"word": "patch",
+"definition": "A software update that fixes or changes functionality."
+},
+{
+"word": "merge",
+"definition": "The process of combining changes from different branches."
+},
+{
+"word": "forks",
+"definition": "Independent copies of a codebase or development project."
+},
+{
+"word": "pipes",
+"definition": "Mechanisms that connect the output of one process to another."
+},
+{
+"word": "calls",
+"definition": "Operations that invoke functions, methods, or procedures."
+},
+{
+"word": "query",
+"definition": "A request for information from a database or system."
+},
+{
+"word": "table",
+"definition": "A database structure organized into rows and columns."
+},
+{
+"word": "joins",
+"definition": "Database operations that combine related tables."
+},
+{
+"word": "views",
+"definition": "Virtual database tables created from queries."
+},
+{
+"word": "forms",
+"definition": "Interfaces used to collect and submit structured data."
+},
+{
+"word": "union",
+"definition": "A database operation that combines results from queries."
+},
+{
+"word": "group",
+"definition": "A database operation that organizes rows by shared values."
+},
+{
+"word": "order",
+"definition": "A database operation that sorts query results."
+},
+{
+"word": "locks",
+"definition": "Mechanisms that control simultaneous access to shared data."
+},
+{
+"word": "mutex",
+"definition": "A synchronization mechanism allowing one thread at a time."
+},
+{
+"word": "races",
+"definition": "Timing-related bugs caused by concurrent operations."
+},
+{
+"word": "tasks",
+"definition": "Units of work executed by a program or system."
+},
+{
+"word": "files",
+"definition": "Named collections of data stored on a computer."
+},
+{
+"word": "disks",
+"definition": "Storage devices used to persist digital data."
+},
+{
+"word": "boots",
+"definition": "The process of starting a computer and its operating system."
+},
+{
+"word": "inode",
+"definition": "A filesystem structure containing information about a file."
+},
+{
+"word": "users",
+"definition": "People or accounts that interact with a computer system."
+},
+{
+"word": "shell",
+"definition": "A program that provides an interface for interacting with an operating system."
+},
+{
+"word": "pages",
+"definition": "Fixed-size blocks commonly used by virtual memory systems."
+},
+{
+"word": "frame",
+"definition": "A fixed-size block of physical memory used for a memory page."
+},
+{
+"word": "cores",
+"definition": "Individual processing units within a CPU."
+},
+{
+"word": "clock",
+"definition": "A timing signal that coordinates processor operations."
+},
+{
+"word": "buses",
+"definition": "Communication pathways connecting computer components."
+},
+{
+"word": "fetch",
+"definition": "The process of retrieving an instruction or data."
+},
+{
+"word": "reset",
+"definition": "An operation that returns a system to an initial state."
+},
+{
+"word": "traps",
+"definition": "Events that transfer control to an operating-system handler."
+},
+{
+"word": "flags",
+"definition": "Bits that record processor or program state."
+},
+{
+"word": "modes",
+"definition": "Different operating states available to hardware or software."
+},
+{
+"word": "proxy",
+"definition": "An intermediary that forwards requests between systems."
+},
+{
+"word": "route",
+"definition": "A path used to send data across a network."
+},
+{
+"word": "ports",
+"definition": "Numbered endpoints used by network services and applications."
+},
+{
+"word": "cloud",
+"definition": "Remote computing resources accessed over a network."
+},
+{
+"word": "links",
+"definition": "Connections between devices, pages, nodes, or resources."
+},
+{
+"word": "hosts",
+"definition": "Devices connected to a computer network."
+},
+{
+"word": "peers",
+"definition": "Network participants that can communicate directly with each other."
+},
+{
+"word": "relay",
+"definition": "A system that forwards data between other systems."
+},
+{
+"word": "retry",
+"definition": "Attempting an operation again after a failure."
+},
+{
+"word": "state",
+"definition": "The current condition or stored information of a system."
+},
+{
+"word": "event",
+"definition": "An occurrence that software can detect and respond to."
+},
+{
+"word": "trust",
+"definition": "Confidence that a system, identity, or component is reliable."
+},
+{
+"word": "nonce",
+"definition": "A value used once in cryptographic protocols."
+},
+{
+"word": "cipher",
+"definition": "An algorithm for encrypting or decrypting information."
+},
+{
+"word": "salts",
+"definition": "Random values added to passwords before hashing."
+},
+{
+"word": "login",
+"definition": "The process of authenticating a user to a system."
+},
+{
+"word": "virus",
+"definition": "Malicious software that can replicate by infecting files."
+},
+{
+"word": "worms",
+"definition": "Malware that can spread between systems without user action."
+},
+{
+"word": "phish",
+"definition": "A deceptive attempt to obtain information through impersonation."
+},
+{
+"word": "spoof",
+"definition": "To disguise an identity, address, or source as something else."
+},
+{
+"word": "audit",
+"definition": "A systematic examination of system activity or security records."
+},
+{
+"word": "roles",
+"definition": "Defined sets of permissions assigned to users or accounts."
+},
+{
+"word": "perms",
+"definition": "Permissions controlling what users or programs can access."
+},
+{
+"word": "model",
+"definition": "A representation of a system, process, or learned relationship."
+},
+{
+"word": "agent",
+"definition": "A system that observes conditions and takes actions."
+},
+{
+"word": "train",
+"definition": "The process of teaching a machine-learning model from data."
+},
+{
+"word": "epoch",
+"definition": "One complete pass through a machine-learning training dataset."
+},
+{
+"word": "layer",
+"definition": "A processing stage within a neural network."
+},
+{
+"word": "embed",
+"definition": "To represent information as numerical vectors."
+},
+{
+"word": "image",
+"definition": "A digital representation of visual information."
+},
+{
+"word": "audio",
+"definition": "Digitally represented sound information."
+},
+{
+"word": "fuzzy",
+"definition": "A computing approach that allows degrees of truth rather than only true or false."
+},
+{
+"word": "rules",
+"definition": "Explicit conditions that determine how a system should behave."
+},
+{
+"word": "input",
+"definition": "Data supplied to a program, system, or algorithm."
+},
+{
+"word": "tapes",
+"definition": "Sequential storage models used in theoretical computation."
+},
+{
+"word": "logic",
+"definition": "Formal reasoning used to represent and evaluate propositions."
+},
+{
+"word": "truth",
+"definition": "A logical value indicating that a proposition is true."
+},
+{
+"word": "proofs",
+"definition": "Formal demonstrations that a mathematical or computational claim follows."
+},
+{
+"word": "lexer",
+"definition": "A component that converts source code into lexical tokens."
+},
+{
+"word": "parse",
+"definition": "The process of analyzing code according to a grammar."
+},
+{
+"word": "radix",
+"definition": "The base used to represent numbers in a numeral system."
+},
+{
+"word": "bloom",
+"definition": "A probabilistic structure used to test whether an item may exist in a set."
+},
+{
+"word": "quick",
+"definition": "A shorthand reference to quicksort, a divide-and-conquer sorting algorithm."
+},
+{
+"word": "sorts",
+"definition": "Algorithms or operations that arrange data into an order."
+},
+{
+"word": "hooks",
+"definition": "Mechanisms that allow code to run when specific events occur."
+}
+]
+}

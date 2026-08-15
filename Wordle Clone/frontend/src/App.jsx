@@ -36,6 +36,7 @@ function App() {
   const [playerStats, setPlayerStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
   const [lastGameStatus, setLastGameStatus] = useState('playing');
+  const [csMode, setCsMode] = useState(true);
 
   const normalizeBoard = (boardState) => {
     const board = createEmptyBoard();
@@ -300,7 +301,7 @@ function App() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       credentials: 'include',
-      body: JSON.stringify({guess : [...guess.toLowerCase()]})
+      body: JSON.stringify({guess : [...guess.toLowerCase()], isCS: csMode})
     })
 
     const data = await response.json()

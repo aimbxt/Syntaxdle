@@ -2,7 +2,7 @@ const gameService = require('../services/gameService');
 const userService = require('../services/userService');
 
 const submitGuess = async (req, res) => {
-    const { guess } = req.body
+    const { guess, isCS } = req.body
     const userId = req.session.user?.id;
 
     if (!userId) {
@@ -10,7 +10,7 @@ const submitGuess = async (req, res) => {
     }
 
     try {
-        const result = await gameService.checkGuess(guess);
+        const result = await gameService.checkGuess(guess, isCS);
 
         const gameState = req.session.gameState || {
             board: [],

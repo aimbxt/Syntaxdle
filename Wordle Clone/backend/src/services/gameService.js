@@ -1,13 +1,20 @@
 const wordService = require('./wordService');
 
-const checkGuess = async (guess) => {
+const getDefinition = () => {
+  return wordService.getDailySolution(true).definition;
+}
+
+const checkGuess = async (guess, isCS) => {
     const guessToString = guess.join('').toLowerCase()
+
     if (!wordService.checkWord(guessToString)) {
         const error = new Error('Not a valid word');
         error.statusCode = 400;
         throw error;
     }
-    const solution = wordService.getDailySolution().split('')
+    
+    const solutionEntry = wordService.getDailySolution(isCS);
+    const solution = isCS ? solutionEntry.word.toLowerCase().split('') : solutionEntry.toLowerCase().split('');
     const letterArray = guess.map((letter) => ({ letter, color: 'gray' }))
 
     // letter count registry
@@ -48,4 +55,4 @@ const checkGuess = async (guess) => {
     return { letterArray, isWin };
 }
 
-module.exports = {checkGuess};
+module.exports = {checkGuess, getDefinition};
