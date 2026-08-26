@@ -69,10 +69,11 @@ const getSession = (req, res) => {
         authenticated: Boolean(req.session.user),
         user: req.session.user || null,
         gameState: req.session.gameState || {
-        board: [],
+            board: [],
             guesses: [],
             status: 'playing',
-            solved: false
+            solved: false,
+            isCS: false
         }
     });
 };

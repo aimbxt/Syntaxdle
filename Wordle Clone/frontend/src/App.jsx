@@ -36,7 +36,7 @@ function App() {
   const [playerStats, setPlayerStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
   const [lastGameStatus, setLastGameStatus] = useState('playing');
-  const [csMode, setCsMode] = useState(true);
+  const [csMode, setCsMode] = useState(false);
 
   const normalizeBoard = (boardState) => {
     const board = createEmptyBoard();
@@ -97,6 +97,9 @@ function App() {
       }
 
       if (data.gameState) {
+        if (typeof data.gameState.isCS === 'boolean') {
+          setCsMode(data.gameState.isCS);
+        }
         hydrateGameState(data.gameState);
       } else {
         resetGameState();
@@ -251,6 +254,11 @@ function App() {
       resetGameState();
     } 
 
+  const toggleMode = () => {
+    setCsMode((currentMode) => !currentMode);
+    resetGameState();
+  };
+
   const letterStatus = useMemo(() => {
     const status = {}
     pastGuesses.forEach((word) => {
@@ -319,10 +327,10 @@ function App() {
 
   return (
     <>
-      <h1>WORDLE</h1>
+      <h1>{csMode ? 'SYNTAXDLE' : 'WORDLE'}</h1>
       {isAuthenticated ? 
       <div> 
-        <NavBar logoutUser={logoutUser} openHowToPlay={() => setActiveModal('howToPlay')} openStats={() => setActiveModal('stats')}/>
+        <NavBar logoutUser={logoutUser} openHowToPlay={() => setActiveModal('howToPlay')} openStats={() => setActiveModal('stats')} isCS={csMode} onModeToggle={toggleMode}/>
         <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
         <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
       </div>:

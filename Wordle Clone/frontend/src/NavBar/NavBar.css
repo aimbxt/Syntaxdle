@@ -36,6 +36,16 @@
   outline-offset: 2px;
 }
 
+.mode-toggle--active {
+  background: #1f1f1f;
+  color: #ffffff;
+}
+
+.mode-toggle--active:hover {
+  background: #ffffff;
+  color: #1f1f1f;
+}
+
 @media (max-width: 480px) {
   .navbar {
     flex-wrap: wrap;

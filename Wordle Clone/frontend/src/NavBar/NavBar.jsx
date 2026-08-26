@@ -1,6 +1,6 @@
 import './NavBar.css';
 
-export default function NavBar({ logoutUser, openHowToPlay, openStats }) {
+export default function NavBar({ logoutUser, openHowToPlay, openStats, isCS, onModeToggle }) {
     const handleLogout = async () => {
         try {
             await logoutUser();
@@ -19,6 +19,15 @@ export default function NavBar({ logoutUser, openHowToPlay, openStats }) {
             </button>
             <button className="nav-button" type="button" onClick={openStats}>
                 Stats
+            </button>
+            <button
+                className={`nav-button mode-toggle ${isCS ? 'mode-toggle--active' : ''}`}
+                type="button"
+                role="switch"
+                aria-checked={isCS}
+                onClick={onModeToggle}
+            >
+                {isCS ? 'CS Words' : 'Normal Words'}
             </button>
         </div>
     );

@@ -12,12 +12,14 @@ const submitGuess = async (req, res) => {
     try {
         const result = await gameService.checkGuess(guess, isCS);
 
-        const gameState = req.session.gameState || {
+        const currentGameState = req.session.gameState;
+        const gameState = !currentGameState || currentGameState.isCS !== Boolean(isCS) ? {
             board: [],
             guesses: [],
             status: 'playing',
-            solved: false
-        };
+            solved: false,
+            isCS: Boolean(isCS)
+        } : currentGameState;
 
         gameState.guesses.push(guess);
         gameState.board.push(result.letterArray);
