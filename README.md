@@ -1,6 +1,6 @@
 # Syntaxdle
 
-A full-stack Wordle-inspired game with a **computer science twist**.
+A full-stack Wordle-inspired game with a **computer science theme**.
 
 Play classic Wordle or switch to **Syntaxdle** to test your knowledge of CS-related terms.
 
